@@ -30,10 +30,11 @@ from time import perf_counter
 class EtaCalculator:
     def __init__(self, iterations, buffer_size=100):
         self.iterations = iterations
+        self.buffer_size = buffer_size
+        self.iteration_count = 0
         self.start_time = 0
         self.recent_times = []
         self.recent_iterations = []
-        self.buffer_size = buffer_size
 
     def start(self):
         self.start_time = perf_counter()
@@ -48,6 +49,7 @@ class EtaCalculator:
     def reset(self):
         self.recent_times = []
         self.recent_iterations = []
+        self.iteration_count = 0
 
     def update_buffer(self, iteration_count):
         self.recent_times.append(perf_counter())
@@ -69,17 +71,18 @@ class EtaCalculator:
         times.append(str(ss).rjust(2, '0'))
         return ':'.join(times)
 
-    def update(self, iteration_count, return_values=False):
-        self.update_buffer(iteration_count)
+    def update(self, iteration_count=0, return_values=False):
+        self.iteration_count += 1
+        self.update_buffer(self.iteration_count)
         elapsed_sec = self.recent_times[-1] - self.recent_times[0]
-        total_iterations = iteration_count - self.recent_iterations[0]
+        total_iterations = self.iteration_count - self.recent_iterations[0]
         ips = total_iterations / elapsed_sec
-        eta = (self.iterations - iteration_count) / ips
+        eta = (self.iterations - self.iteration_count) / ips
         elapsed_time = perf_counter() - self.start_time
-        per = int(iteration_count / float(self.iterations) * 1000.0) / 10.0
+        per = int(self.iteration_count / float(self.iterations) * 1000.0) / 10.0
         eta_str = self.convert_to_time_str(int(eta))
         elapsed_time_str= self.convert_to_time_str(int(elapsed_time))
-        progress_str = f'[iteration: {iteration_count}/{self.iterations}({per:.1f}%), {ips:.2f}it/s, {elapsed_time_str}<{eta_str}]'
+        progress_str = f'[Iteration: {self.iteration_count}/{self.iterations}({per:.1f}%), {ips:.2f}it/s, {elapsed_time_str}<{eta_str}]'
         if return_values:
             return eta, ips, elapsed_time, per, progress_str
         else:
@@ -93,14 +96,10 @@ if __name__ == '__main__':
     total_iterations = 500
     eta_calculator = EtaCalculator(iterations=total_iterations)
     eta_calculator.start()
-    iteration_count = 0
-    while True:
+    for _ in range(total_iterations):
         sleep(0.01)
-        iteration_count += 1
-        progress_str = eta_calculator.update(iteration_count)
-        print(f'\r{progress_str}'.ljust(sh.get_terminal_size()[0]), end='')
-        if iteration_count == total_iterations:
-            break
+        progress_str = eta_calculator.update()
+        print(progress_str)
     avg_ips, elapsed_time = eta_calculator.end()
     eta_calculator.reset()
     print(f'\ntotal {total_iterations} iterations end successfully with avg IPS {avg_ips:.1f}, elapsed time : {elapsed_time}')
