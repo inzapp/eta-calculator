@@ -13,9 +13,9 @@ How to use it is as follows
 total_iterations = 500
 eta_calculator = EtaCalculator(iterations=total_iterations)
 eta_calculator.start()
-for _ in range(total_iterations):
+for i in range(total_iterations):
     # your task here
-    progress_str = eta_calculator.update()
+    progress_str = eta_calculator.update(i + 1)
     print(progress_str)
 avg_ips, elapsed_time = eta_calculator.end()
 eta_calculator.reset()
@@ -49,9 +49,11 @@ loop_iters_1 = 50
 loop_iters_2 = 50
 total_iterations = loop_iters_1 * loop_iters_2
 eta_calculator = EtaCalculator(iterations=total_iterations)
+iteration_count = 0
 eta_calculator.start()
 for _ in range(loop_iters_1):
     for _ in range(loop_iters_2):
         # your task here
-        progress_str = eta_calculator.update()
+        iteration_count += 1
+        progress_str = eta_calculator.update(iteration_count)
 ```
