@@ -27,7 +27,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from time import perf_counter
 
 
-class EtaCalculator:
+class ETACalculator:
     def __init__(self, iterations, buffer_size=100):
         self.iterations = iterations
         self.buffer_size = buffer_size
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     import shutil as sh
     from time import sleep
     total_iterations = 500
-    eta_calculator = EtaCalculator(iterations=total_iterations)
+    eta_calculator = ETACalculator(iterations=total_iterations)
     eta_calculator.start()
     for _ in range(total_iterations):
         sleep(0.01)
