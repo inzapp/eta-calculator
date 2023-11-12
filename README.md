@@ -24,7 +24,7 @@ print(f'\ntotal {total_iterations} iterations end successfully with avg IPS {avg
 
 If you run the snippet above, it will be output as follows
 
-This is an example of replacing the task in the annotation section with time.sleep(0.1)
+If you simply change the commented line to time.sleep(0.1) and run it, it will be executed as follows
 
 ```
 [Iteration: 1/500(0.2%), 10.06it/s, 00:00:00<00:00:49]
