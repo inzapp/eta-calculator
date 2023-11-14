@@ -18,7 +18,6 @@ for i in range(total_iterations):
     progress_str = eta_calculator.update(i + 1)
     print(progress_str)
 avg_ips, elapsed_time = eta_calculator.end()
-eta_calculator.reset()
 print(f'\ntotal {total_iterations} iterations end successfully with avg IPS {avg_ips:.1f}, elapsed time : {elapsed_time}')
 ```
 
